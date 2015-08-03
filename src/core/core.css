@@ -43,7 +43,6 @@ html, body, .bShri{
             text-decoration: underline;}
     .bShri__content{
         background-color: white;
-        border: 1px solid #b9b9b9;
         min-height: 100px;
         -webkit-box-shadow:  0 0 5px #bebebe;
         -moz-box-shadow:  0 0 5px #bebebe;
