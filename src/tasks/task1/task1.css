@@ -1,3 +1,28 @@
+.bTask1{
+    overflow: hidden;
+    text-align: center;}
+    .bTask1__header{
+        /* Приклеивание шапки без использования JS */
+        /*position: -webkit-sticky;*/
+        /*position: -moz-sticky;*/
+        /*position: -ms-sticky;*/
+        /*position: -o-sticky;*/}
+        .bTask1__header th{
+            vertical-align: middle !important;
+            text-align: center;}
+
+        .bTask1__header_fixed{
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            background-color: white;
+        }
+
+        .row,
+        .container{
+            padding-left: 0;
+            padding-right: 0;}
+
 /*table {*/
 /*overflow: hidden;*/
 /*}*/
