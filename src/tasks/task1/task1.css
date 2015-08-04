@@ -34,6 +34,12 @@
         .bTask1__header_fixed .bTask1__headerHidden{
             display: table-row;}
 
+
+         /* choice row */
+        /*.bTask1 tr:nth-child(even) {*/
+            /*background-color: #f5f5f5;}*/
+
+
         /* choice column */
         .bTask1 td {
             position: relative;}
@@ -47,4 +53,37 @@
                 width: 100%;
                 z-index: -1;}
 
+        /* disable flight type */
+        #arrivals,
+        #departures{
+            display: none;}
 
+        .arrivals,
+        .departures{
+            display:none;}
+        #arrivals:checked  + span .arrivals{
+            display: table-row;}
+        #departures:checked + span .departures{
+            display: table-row;}
+
+        #arrivals:checked + span label[for=arrivals]::first-letter,
+        #departures:checked + span label[for=departures]::first-letter{
+            color:red;}
+
+        /* show detail information */
+        .bTask1__details > div{
+            display: none;
+            color:black;
+            padding: 10px;
+            background-color: white;
+            border: 5px solid #b9b9b9;
+            cursor: default;}
+            .bTask1__details > div *{
+                font-size: 1.2em;
+                position: relative !important;}
+        .bTask1__details:focus div{
+            display: block;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 1001;}
