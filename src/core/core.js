@@ -16,6 +16,8 @@
      *
      */
     var Application = function(src, logo, content, tasks){
+        if(singleton !== null)return singleton;
+
         try{
             this.src = src || '/src/tasks/task';
             this.head = document.getElementsByTagName('head')[0];
@@ -23,13 +25,29 @@
             this.content = this.getElements(content)[0];
             this.tasks = this.getElements(tasks);
             this.initialize();
+            singleton = this;
+
         }catch(e){
             this.exception('Can`t initialize application');
         }
-    };
+    },
+    singleton = null;
 
     Application.prototype = {
         'constructor':Application,
+
+        /**
+         * Small template engine
+         *
+         * @param {string} string       template
+         * @param {object} replaceObj   substitute values
+         * @returns {XML|string|void}
+         */
+        'template':function(string, replaceObj){
+            return string.replace(/{[^{}]+}/g, function(key){
+                return replaceObj[key.replace(/[{}]+/g, "")] || "";
+            });
+        },
 
         /**
          * Exception handler
