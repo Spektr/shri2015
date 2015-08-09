@@ -98,6 +98,12 @@
             xhr.open("GET", ajax.url, true);
             xhr.send();
         },
+
+        /**
+         * Visualization of loading
+         *
+         * @param {boolean} flag   loading checker
+         */
         'loading':function(flag){
             var logo = this.logo;
 
@@ -108,6 +114,10 @@
             }
 
         },
+
+        /**
+         * Set handlers for links
+         */
         'initialize':function(){
             var _this = this,
                 tasks = _this.tasks,
@@ -155,6 +165,7 @@
 
 })(window);
 
+// инициируем приложение (оно спрячется в синглтон)
 var app = new Application(
     '/shri2015/src/tasks/task',
     'bShri__logo',
