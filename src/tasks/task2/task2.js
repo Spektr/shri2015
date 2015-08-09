@@ -42,26 +42,47 @@ function getData(url, callback) {
 }
 
 /**
- * Ваши изменения ниже
+ * Ваши изменения ниже.
+ *
+ * Для начала спрячем все и слегка систематизируем.
  */
-var requests = ['/countries', '/cities', '/populations'];
-var responses = {};
+(function(){
+    var app = new Application(),
 
-for (i = 0; i < 3; i++) {
-    var request = requests[i];
-    var callback = function (error, result) {
-        responses[request] = result;
-        var l = [];
-        for (K in responses)
-            l.push(K);
+        /** элементы интерфейса */
+        continent   = app.getElements('bTask2__continent')[0],  // континент
+        country     = app.getElements('bTask2__country')[0],    // страна
+        city        = app.getElements('bTask2__city')[0],       // город
+        counter     = app.getElements('bTask2__counter')[0],    // кнопка рассчета
+        shower      = app.getElements('bTask2__shower')[0],     // поле ответа
 
-        if (l.length == 3) {
-            var c = [], cc = [], p = 0;
+        /** переменные и данные */
+        requests    = ['/countries', '/cities', '/populations'],
+        responses   = {},
+        request, callback, i,
+
+        /**
+         * Считалка населения
+         *
+         * @param {object} parameters  набор параметров для подсчета населения
+         * @void рассчитывает население и вызывает функцию обратного вызова
+         */
+        count = function(parameters){
+            var responses   = parameters.responses || {},   // блок данных
+                continent   = parameters.continent || '',   // выбранный континет
+                country     = parameters.country || '',     // выбранная страна
+                city        = parameters.city || '',        // выбранный город
+                callback    = parameters.callback || function(){},  // функция обратного вызова
+                c = [], cc = [], p = 0, i;
+
             for (i = 0; i < responses['/countries'].length; i++) {
-                if (responses['/countries'][i].continent === 'Africa') {
+                if (responses['/countries'][i].continent === continent) {
                     c.push(responses['/countries'][i].name);
                 }
             }
+
+            /** Добавляем указанную страну */
+            if(country!=='' && c.indexOf(country) == -1)c.push(country);
 
             for (i = 0; i < responses['/cities'].length; i++) {
                 for (j = 0; j < c.length; j++) {
@@ -71,6 +92,9 @@ for (i = 0; i < 3; i++) {
                 }
             }
 
+            /** Добавляем указанный город */
+            if(city!=='' && cc.indexOf(city) == -1)cc.push(city);
+
             for (i = 0; i < responses['/populations'].length; i++) {
                 for (j = 0; j < cc.length; j++) {
                     if (responses['/populations'][i].name === cc[j]) {
@@ -79,9 +103,64 @@ for (i = 0; i < 3; i++) {
                 }
             }
 
-            console.log('Total population in African cities: ' + p);
-        }
-    };
+            parameters.result = p;
+            parameters.c = c;
+            parameters.cc = cc;
 
-    getData(request, callback);
-}
+            callback(parameters);
+        },
+
+        /**
+         * Отображалка населения
+         *
+         * @param {object} parameters  набор параметров для подсчета населения
+         * @void отображает в поле/консоли рассчитанное население
+         */
+        show = function(parameters){
+
+            // визуальное
+            shower.value = parameters.result + ' чел.';
+
+            // детальное
+            console.log('Total population in '+parameters.cc.join(', ')+' cities: ' + parameters.result);
+        };
+
+
+    /** назначим обработчик для подсчета населения */
+    counter.onclick = function(){
+
+        for (i = 0; i < 3; i++) {
+
+            request = requests[i];
+
+            /** замыкаем адрес запроса (устранение прошлой ошибки) */
+            callback = (function(request){
+
+                return function (error, result) {
+                    var l = [], K;
+                    responses[request] = result;
+
+                    for (K in responses)
+                        l.push(K);
+
+                    if (l.length == 3) {
+                        count({
+                            'responses':responses,
+                            'continent': continent.value,
+                            'country':country.value,
+                            'city':city.value,
+                            'callback':show
+                        });
+                    }
+                };
+
+            })(request);
+
+            getData(request, callback);
+        }
+
+        /** очищаем данные */
+        responses = {};
+    }
+
+})();
