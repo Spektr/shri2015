@@ -1,89 +1,142 @@
-/* hack for bootstrap styles */
-.row, .container{
+/* маленькие хаки для bootstrap */
+.container{
     padding-left: 0;
     padding-right: 0;}
-.bTask1__headerVisible:before{
-    content: normal;}
+.row{
+    display: block;
+    margin-left: 0;
+    margin-right: 0;}
+
+@media (min-width: 1200px){
+    .visible-lg {
+        display: table-cell !important;
+    }
+}
+@media (max-width: 767px){
+    .visible-xs {
+        display: table-cell !important;
+    }
+}
+
+
+/* отображение типов рейса */
+#arrivals, #departures,
+.arrivals, .departures{
+    display: none;}
+
+    #arrivals:checked ~ div label[for=arrivals]::first-letter,
+    #departures:checked ~ div label[for=departures]::first-letter{
+        color:red;}
+
+    #arrivals:checked ~ .bTask1 .arrivals,
+    #departures:checked ~ .bTask1 .departures{
+        display:block;}
+
+    /** используя костыль с разными тегами у разных типов снова разлиновываем */
+    #arrivals:checked + #departures:not(:checked) ~ .bTask1 .arrivals:nth-of-type(even),
+    #arrivals:not(:checked) + #departures:checked ~ .bTask1 .departures:nth-of-type(even),
+    #arrivals:checked + #departures:checked ~ .bTask1 .row:nth-child(even){
+        background-color: rgba(245, 245, 245, 0.5);}
+
 
 .bTask1{
     position:relative;
     z-index: 0;
     overflow: hidden;
-    text-align: center;}
+    text-align: center;
+    word-break: break-all;}
+    .bTask1 img,
+    .bTask1 div{
+        max-width: 100%;
+        padding: 2px;
+        text-align: center;}
     .bTask1__header{
         position:relative;
         z-index: 1;
         background-color: white;
-        /* sticky header without JS */
+        border: 1px solid #f5f5f5;
+        display: table;
+        /* приклеивание шапки без JS (из-за плохой поддержки не актуально) */
         /*position: -webkit-sticky;*/
         /*position: -moz-sticky;*/
         /*position: -ms-sticky;*/
         /*position: -o-sticky;*/}
-        .bTask1__header th{
-            vertical-align: middle !important;
-            text-align: center;}
+        .bTask1__header div{
+            display: table-cell;
+            vertical-align: middle;
+            border-right: 1px solid #f5f5f5;
+            float:none;}
+            .bTask1__header div:last-child{
+                border-right: 0;}
 
-        /* fixed header */
-        .bTask1__headerHidden{
-            display: none;}
-        .bTask1__header_fixed .bTask1__headerVisible{
+        /* фиксация шапки */
+        .bTask1__header_fixed{
             position: fixed;
             z-index: 1000;
-            top: 0;
-            background-color: inherit;}
-        .bTask1__header_fixed .bTask1__headerHidden{
-            display: table-row;}
+            top: 0;}
+
+    /* выделение строк (перекрывает любое подсвечивание) */
+    .bTask1 .row:hover{
+        background-color: #f5f5f5 !important;}
+
+    /* выделение столбцов */
+    .bTask1 .row > a > div {
+        display: table-cell;
+        vertical-align: middle;
+        float: none;}
+    .bTask1 .row > a > div:hover::after{
+        content: "";
+        position: absolute;
+        background-color: #f5f5f5;
+        left: 0;
+        top: -5000px;
+        height: 10000px;
+        width: 100%;
+        z-index: -1;}
 
 
-         /* choice row */
-        /*.bTask1 tr:nth-child(even) {*/
-            /*background-color: #f5f5f5;}*/
-
-
-        /* choice column */
-        .bTask1 td {
-            position: relative;}
-            .bTask1 td:hover::after{
-                content: "";
-                position: absolute;
-                background-color: #f5f5f5;
-                left: 0;
-                top: -5000px;
-                height: 10000px;
-                width: 100%;
-                z-index: -1;}
-
-        /* disable flight type */
-        #arrivals,
-        #departures{
-            display: none;}
-
-        .arrivals,
-        .departures{
-            display:none;}
-        #arrivals:checked  + span .arrivals{
-            display: table-row;}
-        #departures:checked + span .departures{
-            display: table-row;}
-
-        #arrivals:checked + span label[for=arrivals]::first-letter,
-        #departures:checked + span label[for=departures]::first-letter{
-            color:red;}
-
-        /* show detail information */
-        .bTask1__details > div{
+    /* отображение детальной информации о рейсе */
+    .bTask1__details{
+        color:inherit;
+        text-decoration: none !important;}
+        .bTask1__detailsBody{
             display: none;
-            color:black;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 1001;
             padding: 10px;
             background-color: white;
             border: 5px solid #b9b9b9;
             cursor: default;}
-            .bTask1__details > div *{
-                font-size: 1.2em;
-                position: relative !important;}
-        .bTask1__details:focus div{
-            display: block;
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            z-index: 1001;}
+            .bTask1__detailsBody a{
+                float: right;
+                margin: 7px;}
+        :target.bTask1__detailsBody{
+            display: block;}
+
+    /** иконки */
+    .bTask1__icon{
+        display: inline-block;
+        background: url("img/planes.png");
+        width: 22px;
+        height: 22px;}
+        .bTask1__icon::after{
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            padding: 2px;
+            word-break: normal;
+            background-color: #feffa2;
+            margin-left: 50%;
+            border: 1px solid #b6b6b6;}
+            .bTask1__icon:hover::after{
+                display: block;}
+        .bTask1__icon_arrivals{
+            background-position-y: 64px;}
+            .bTask1__icon_arrivals::after{
+                content: 'прибытие';}
+        .bTask1__icon_departures{
+            background-position-y: 22px;}
+            .bTask1__icon_departures::after{
+                content: 'отправление';}
