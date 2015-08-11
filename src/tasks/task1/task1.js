@@ -1,52 +1,59 @@
 (function(){
     var app = new Application(),
+
+        /** элементы табло (шапка и тело) */
         header = app.getElements('bTask1__header')[0],
         content = app.getElements('bTask1__content')[0],
+
+        /** для фиксации шапки табло */
         offsetTop = header.offsetTop,
         parent = header,
+
+        /** шаблон для детальной информации по рейсу */
         detailTemplate = '' +
-            '<a href="#" class="bTask1__details">' +
-                '{id}' +
-                '<div>' +
-                    '<div> Тип рейса: {flight}</div>' +
-                    '<div> Код рейса: {id}</div>' +
-                    '<div> Авиакомпания: {airline}</div>' +
-                    '<div> Логотип: <img src="http://tablo.novene.ru/themes/aviatablo/images/airline_logos/{logo}@2x.png"/></div>' +
-                    '<div> Тип саполета: {type}</div>' +
-                    '<div> Аэропорт назначения: {airport}</div>' +
-                    '<div> Время: {time}</div>' +
-                    '<div> Статус рейса: {status}</div>' +
-                    '<div> Примечание: {note}</div>'+
-                '</div>' +
-            '</a>'
+            '<div id="{id}" class="bTask1__detailsBody">' +
+                '<a href="#">X</a>' +
+                '<div><img src="http://tablo.novene.ru/themes/aviatablo/images/airline_logos/{logo}@2x.png"/></div>' +
+                '<strong>Рейс №{id}</strong> <div class="bTask1__icon bTask1__icon_{flight}"></div>' +
+                '<div> Воздушное судно: {type}</div>' +
+                '<div> Авиакомпания: {airline}</div>' +
+                '<div> Аэропорт назначения: {airport}</div>' +
+                '<div> Время: {time}</div>' +
+                '<div> Статус рейса: {status}</div>' +
+                '<div> Примечание: {note}</div>'+
+            '</div>'
         ,
         rowTemplate = ''+
-            '<tr class="{flight}">' +
-                '<td>{flight}</td>'+                        // тип рейса
-                '<td>'+detailTemplate +'</td>'+             // номер рейса
-                '<td class="visible-lg">{airline}</td>'+    // авиакомпания
-                '<td><img src="http://tablo.novene.ru/themes/aviatablo/images/airline_logos/{logo}@2x.png"/> </td>'+                          // логотип
-                '<td class="hidden-xs">{type}</td>'+        // тип воздушного судна
-                '<td class="visible-xs">{shorttype}</td>'+  // сокращенный тип воздушного судна
-                '<td>{airport}</td>'+                       // аэропорт назначения
-                '<td>{time}</td>'+                          // плановое время вылета или прилёта
-                '<td>{status}</td>'+                        // статус рейса
-                '<td>{note}</td>'+                          // примечание
-            '</tr>';
+            '<{container} class="row {flight}">' +
+                '<a href="#{id}" class="bTask1__details">' +
+                    '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><div class="bTask1__icon bTask1__icon_{flight}"></div></div>' +   // тип рейса
+                    '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{id}</div>'+                      // номер рейса
+                    '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 visible-lg">{airline}</div>'+      // авиакомпания
+                    '<div class="col-xs-2 col-sm-2 col-md-2 col-lg-1"><img src="http://tablo.novene.ru/themes/aviatablo/images/airline_logos/{logo}@2x.png"/> </div>' +     // логотип
+                    '<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 hidden-xs">{type}</div>'+          // тип воздушного судна
+                    '<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 visible-xs">{shorttype}</div>'+    // сокращенный тип воздушного судна
+                    '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{airport}</div>'+                 // аэропорт назначения
+                    '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{time}</div>'+                    // плановое время вылета или прилёта
+                    '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{status}</div>'+                  // статус рейса
+                    '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">{note}</div>'+                    // примечание
+                '</a>'+
+                detailTemplate +
+            '</{container}>';
 
 
     /** приклеиваем шапку табло при прокрутке */
     while (parent = parent.offsetParent)offsetTop += parent.offsetTop;
-
     function onScroll(e) {
-        (window.scrollY >= offsetTop) ? header.classList.add('bTask1__header_fixed') :
+
+        var scrollY = ('scrollY' in window)?window.scrollY:window.pageYOffset;
+
+        (scrollY >= offsetTop) ? header.classList.add('bTask1__header_fixed') :
             header.classList.remove('bTask1__header_fixed');
     }
-
     document.addEventListener('scroll', onScroll);
-    /** приклеиваем шапку табло при прокрутке */
 
 
+    /** задаем тестовые данные */
     var testData = [
         {
             "id":"1",
@@ -290,7 +297,13 @@
         }
     ];
 
+
+    /** отрисовываем */
     for(var key in testData){
+
+        /** костыль для правильной подсветки выбранных маршрутов */
+        testData[key].container = (testData[key].flight == 'arrivals')?'span':'div';
+
         content.innerHTML += app.template(rowTemplate,testData[key]);
     }
 
