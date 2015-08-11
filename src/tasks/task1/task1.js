@@ -53,250 +53,66 @@
     document.addEventListener('scroll', onScroll);
 
 
-    /** задаем тестовые данные */
-    var testData = [
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"AC",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"DX",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"EA",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"FD",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"FB",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"FJ",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"FI",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"5H",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"5R",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"5T",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"4U",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"XL",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"XK",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"XF",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"XF",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"Y0",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"XR",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"XF",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"departures",
-            "airline":"Aeroflot",
-            "logo":"XF",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        },
-        {
-            "id":"1",
-            "flight":"arrivals",
-            "airline":"Aeroflot",
-            "logo":"XF",
-            "type":"Boeing 737-800",
-            "shorttype":"B737",
-            "airport":"ABQ",
-            "time":"11:30",
-            "status":"регистрация",
-            "note":"примечание"
-        }
-    ];
+    /** генерируем тестовые данные */
+    var testData =[],
+        date = (new Date()).getTime(),
+        num = 756,
+        temp, dateObj, airline, plane, flight, i;
 
+    for(i=0; i<48; i++){
+
+        date+= 30*60*1000;
+        dateObj = new Date(date);
+
+        airline = app.random([
+            {"name":"Air Canada", "logo":"AC"},
+            {"name":"DAT", "logo":"DX"},
+            {"name":"EAE", "logo":"EA"},
+            {"name":"Thai Air Asia", "logo":"FD"},
+            {"name":"Bulgaria Air", "logo":"FB"},
+            {"name":"Icelandair", "logo":"FI"},
+            {"name":"54", "logo":"5H"},
+            {"name":"Cartilago Airlines", "logo":"5R"},
+            {"name":"Canadian North", "logo":"5T"},
+            {"name":"Germanwings", "logo":"4U"},
+            {"name":"LAN", "logo":"XL"},
+            {"name":"CCM Airlines", "logo":"XK"},
+            {"name":"Владивосток Авиа", "logo":"XF"}
+        ]);
+
+        plane = app.random([
+            {"name":"Boeing 737-800", "short":"B737"},
+            {"name":"Airbus A319", "short":"A319"},
+            {"name":"Airbus A320", "short":"A320"},
+            {"name":"Airbus A330-200", "short":"A330"}
+        ]);
+
+        temp = {
+            "id":num++,
+            "flight":(flight = app.random(["arrivals","departures"])),
+            "airline":airline.name,
+            "logo":airline.logo,
+            "type":plane.name,
+            "shorttype":plane.short,
+            "airport":app.random([
+                "Париж(Шарль Де Голь)",
+                "Сеул(Инчеон)",
+                "Краснодар(Пашковский)",
+                "Прага(Вацлав Гавел)",
+                "Гамбург(Гамбург)",
+                "Токио(Нарита)",
+                "Стамбул(Ататюрк)",
+                "Шанхай(Пудон)"
+            ]),
+            "time":dateObj.getHours()+":"+dateObj.getMinutes(),
+            "status":(flight == "departures")?app.random(["регистрация", "ожидание посадки", "посадка закончена", "вылетел", "задерживается до", "отменён"]):app.random(["по расписанию", "летит", "приземлился", "задерживается до", "отменён"]),
+            "note":app.random(["-", "-", "-", "-", "-", airline.logo+"/AN",airline.logo+"/EX",airline.logo+"/FA"])
+        };
+
+        if(temp.status == "задерживается до")temp.status+=(new Date(date+(Math.random()*10*60*60*1000))).getHours()+":00"
+
+        testData.push(temp);
+    }
 
     /** отрисовываем */
     for(var key in testData){

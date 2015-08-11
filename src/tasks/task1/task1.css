@@ -8,12 +8,12 @@
     margin-right: 0;}
 
 @media (min-width: 1200px){
-    .bTask1__header .visible-lg {
+    .visible-lg {
         display: table-cell !important;
     }
 }
 @media (max-width: 767px){
-    .bTask1__header .visible-xs {
+    .visible-xs {
         display: table-cell !important;
     }
 }
@@ -75,17 +75,15 @@
             z-index: 1000;
             top: 0;}
 
-    /* базовое подсвечивание строк */
-    /*.bTask1 .row:nth-child(even) {*/
-        /*background-color: rgba(245, 245, 245, 0.5);}*/
-
     /* выделение строк (перекрывает любое подсвечивание) */
     .bTask1 .row:hover{
         background-color: #f5f5f5 !important;}
 
     /* выделение столбцов */
     .bTask1 .row > a > div {
-        position: relative;}
+        display: table-cell;
+        vertical-align: middle;
+        float: none;}
     .bTask1 .row > a > div:hover::after{
         content: "";
         position: absolute;
@@ -99,7 +97,8 @@
 
     /* отображение детальной информации о рейсе */
     .bTask1__details{
-        color:inherit;}
+        color:inherit;
+        text-decoration: none !important;}
         .bTask1__detailsBody{
             display: none;
             position: fixed;
