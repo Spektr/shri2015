@@ -5,7 +5,7 @@
         Player = function(parameters){
 
             var source = parameters.source,
-                destination = parameters.destination,
+                visual = parameters.visual,
                 startBtn = parameters.startBtn,
                 stopBtn = parameters.stopBtn,
                 settings = parameters.settings,
@@ -16,7 +16,7 @@
             //try{
 
                 this.source = this.getElements(source)[0];
-                this.destination = this.getElements(destination)[0];
+                this.visual = this.getElements(visual)[0];
                 this.startBtn = this.getElements(startBtn)[0];
                 this.stopBtn = this.getElements(stopBtn)[0];
                 this.settings = this.getElements(settings)[0];
@@ -36,13 +36,13 @@
         "_input":null,           // скрытое поле файла
         "_audioContext":null,    // апи
         "_buffer":null,          // текущий аудио буфер
-        "_pauseTime":0,          // время прослушивания
+        "_pauseTime":null,       // время прослушивания
         "_songTime":null,        // общее время трэка
 
 
         // фильтры
         "_filters": {
-            "default": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "normal": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             "pop": [-2, -1, 0, 3, 5, 5, 2, 0, -1, -3],
             "rock": [4, 3, 0, -3, -4, -4, -1, 2, 3, 4],
             "jazz": [4, 3, 1, 2, -3, -3, 0, 1, 3, 4],
@@ -68,37 +68,52 @@
             // создаем аудио контекст
             if(!_this._audioContext)_this._audioContext = new AudioContext();
 
-
-            // создаем источник
-            _this.sourceNode = _this._audioContext.createBufferSource();
-
             // создаем эквалайзер
             _this.equalizerNode = _this.createEqualizerNode();
 
             // создаем вывод звука
             _this.destinationNode = _this._audioContext.destination;
 
-
-            // делаем схему обработки аудио
-            _this.sourceNode.connect(_this.equalizerNode);
+            // делаем схему обработки аудио (начиная с эквалайзера)
             _this.equalizerNode.connect(_this.destinationNode);
 
-            // задаем двумерных контекст канве
-            _this.destination.getContext('2d');
+            // задаем двумерный контекст канве
+            _this.visual.getContext('2d');
 
             // обработчик клика на области загрузки
             _this.source.addEventListener("click", function(){_this._input.click();});
 
             // загрузка файла при перетаскивании
-            _this.source.addEventListener('drop', _this.loadFile(), false);
+            _this.source.addEventListener('drag', _this.loadFile(), false);
 
             // загрузка файла при выборе
-            _this._input.addEventListener('change', _this.loadFile(), false);
+            _this._input.addEventListener('change', _this.loadFile(function(){_this.startBtn.innerHTML = "пауза";}), false);
+
+            // установка настройки эквалайзера
+            _this.settings.addEventListener('change', function(){
+                var type = this.options[this.selectedIndex].value;
+                _this.equalizerNode.setType(type);
+            }, false );
+
+            // обработчик клика на старт/пауза
+            _this.startBtn.addEventListener("click", function(){
+                if(_this.play()){
+                    _this.startBtn.innerHTML = "пауза";
+                }else{
+                    _this.startBtn.innerHTML = "старт";
+                }
+            });
+
+            // обработчик клика на стоп
+            _this.stopBtn.addEventListener("click", function(){
+                _this.stop();
+                _this.startBtn.innerHTML = "старт";
+            });
 
         },
 
         // загрузка файла
-        "loadFile":function(){
+        "loadFile":function(callback){
             var _this = this;   // замкнем текущий проигрыватель чтоб не потерялся
 
             return function(e){
@@ -106,8 +121,7 @@
                     fileReader = new FileReader();
 
                 e.preventDefault();
-
-                if(_this._buffer)_this.stop();
+                _this.stop();
 
                 if(!(/\.(wav|mp3|ogg)$/i).test(file.name))return _this.exception('Wrong file format (correct is wav|mp3|ogg)');
 
@@ -121,6 +135,7 @@
                             _this.showAudio();
                             _this.play();
                             _this.getMeta(file);
+                            callback();
                         },
                         function(){_this.exception("Decode audio data error");}
                     );
@@ -132,30 +147,44 @@
 
         // старт|пауза музыки
         "play":function(){
-            var _this = this,
-                pause = _this.pauseTime;
+            var _this = this;
 
-            _this.sourceNode.buffer = _this._buffer;
-
-            if(pause){
-                _this.sourceNode.start(0, pause);
-            }else{
-                _this.sourceNode.start(0);
+            if(_this.sourceNode){
+                _this.sourceNode.stop(0);
+                _this.pauseTime = (Date.now() - _this.pauseTime)/1000;
+                _this.sourceNode = null;
+                return false;
             }
 
+            // создаем источник и связываем с эквалайзером
+            _this.sourceNode = _this._audioContext.createBufferSource();
+            _this.sourceNode.connect(_this.equalizerNode);
+            _this.sourceNode.buffer = _this._buffer;
 
-            _this._songTime = _this.sourceNode.buffer.duration*1000;
-            _this.setStatus(_this._songTime, 5000);
+            // отслеживаем паузу
+            if(_this.pauseTime){
+                _this.sourceNode.start(0, _this.pauseTime);
+            }else{
+                _this.sourceNode.start(0);
+                _this._songTime = _this._buffer.duration*1000;
+                _this.setStatus(_this._songTime, 5000);
+            }
 
+            _this.pauseTime = Date.now();
+
+            return true;
         },
+
 
         // стоп музыки
         "stop":function(){
             var _this = this;
 
             if(_this.sourceNode)_this.sourceNode.stop(0);
-            _this.buffer = null;
-            _this.pauseTime = 0;
+
+            _this.sourceNode = null;
+            _this.pauseTime = null;
+
         },
 
         // показ музыки
@@ -206,8 +235,8 @@
 
             // РИСКОВЫЕ ПЕРЕГРУЗКИ МЕТОДОВ
             // для связки (filter === equalizer[equalizer.length-1])
-            equalizer[0].connect = function(obj){
-                return filter.connect(obj);//.apply(filter, arguments);
+            equalizer[0].connect = function(){
+                return filter.connect.apply(filter, arguments);
             };
 
             // для настройки эквалайзера
@@ -217,7 +246,7 @@
                 });
             };
 
-            equalizer[0].setType('default');
+            equalizer[0].setType('normal');
 
             return equalizer[0];
         }
@@ -229,9 +258,13 @@
     // создаем проигрыватель
     var playerok = new Player({
         source: 'bTask3__file',
-        destination: 'bTask3__visual',
-        statusBar: 'bTask3__file'
+        visual: 'bTask3__visual',
+        statusBar: 'bTask3__file',
+        settings: 'bTask3__settings',
+        startBtn: 'bTask3__play',
+        stopBtn: 'bTask3__stop'
     });
+
 
 
 
