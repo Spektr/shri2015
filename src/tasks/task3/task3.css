@@ -1,0 +1,27 @@
+.bTask3{}
+    .bTask3__visual{
+        width: 100%;
+        height: inherit;}
+    .bTask3__file{
+        display: table-cell;
+        position: relative;
+        height: inherit;
+        background-color: #F5F5F5;
+        border: 5px solid white;
+        padding: 20px;
+
+        text-align: center;
+        vertical-align: middle;
+        font-weight: bold;
+        color: #C5C5C5;
+        text-shadow: 1px 1px 0 white;
+        cursor: pointer;}
+    .bTask3__menu{}
+    .bTask3__controls{}
+    .bTask3__info{}
+    .bTask3__settings{}
+
+    .bTask3__visual,
+    .bTask3__file{
+        height: 200px;}
+
