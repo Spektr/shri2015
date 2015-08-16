@@ -194,8 +194,22 @@
 
         // получение|отображение меты файла
         "getMeta":function(file){
-            var _this = this;
-            _this.setStatus("Сейчас воспроизводится "+file.name);
+            var _this = this,
+                name = file.name,
+                ID3 = window.ID3;
+
+            _this.setStatus("Сейчас воспроизводится "+name);
+
+            // VENDOR
+            ID3.loadTags(name, function() {
+                var tags = ID3.getAllTags(name);
+
+               _this.songName.innerText = ' - '+tags.title+(tags.album?' [альбом: '+tags.album+']':'');
+               _this.songAuthor.innerText = tags.artist;
+            }, {
+                tags: ["artist", "title", "album"],
+                dataReader: FileAPIReader(file)
+            });
         },
 
         // отображение статуса (покачто только для загрузки файла)
@@ -256,6 +270,15 @@
     };
 
 
+    /**
+     * Добавляем вендора для забора мета данных
+     *
+     * {@link https://github.com/aadsm/JavaScript-ID3-Reader}
+     */
+    var id3js = document.createElement('script');
+    id3js.src = "vendor/aadsm/id3-minimized.js";
+    app.head.appendChild(id3js);
+
     // создаем проигрыватель
     var playerok = new Player({
         source: 'bTask3__file',
@@ -263,7 +286,9 @@
         statusBar: 'bTask3__file',
         settings: 'bTask3__settings',
         startBtn: 'bTask3__play',
-        stopBtn: 'bTask3__stop'
+        stopBtn: 'bTask3__stop',
+        songName: 'bTask3__name',
+        songAuthor: 'bTask3__author'
     });
 
 
