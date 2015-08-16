@@ -84,7 +84,8 @@
             _this.source.addEventListener("click", function(){_this._input.click();});
 
             // загрузка файла при перетаскивании
-            _this.source.addEventListener('drag', _this.loadFile(), false);
+            _this.source.addEventListener('dragover', function(e) {e.preventDefault();return false;}, false);
+            _this.source.addEventListener('drop', _this.loadFile(function(){_this.startBtn.innerHTML = "пауза";}), false);
 
             // загрузка файла при выборе
             _this._input.addEventListener('change', _this.loadFile(function(){_this.startBtn.innerHTML = "пауза";}), false);
