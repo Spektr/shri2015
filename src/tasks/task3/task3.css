@@ -1,0 +1,46 @@
+/* анимация для бегущей строки */
+.marquee {
+    margin: 0 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    animation: marquee 20s linear infinite;}
+
+.marquee:hover {
+    animation-play-state: paused;}
+
+@keyframes marquee {
+    0%   { text-indent: 100% }
+    100% { text-indent: -100% }
+}
+
+.bTask3{
+    position: relative;
+    overflow: hidden;}
+    .bTask3__visual{
+        width: 100%;
+        height: inherit;}
+    .bTask3__file{
+        position: relative;
+        background-color: #F5F5F5;
+        padding: 20px;
+
+        text-align: center;
+        font-weight: bold;
+        color: #C5C5C5;
+        text-shadow: 1px 1px 0 white;
+        cursor: pointer;}
+    .bTask3__menu{
+        position:relative;
+        overflow: hidden;
+        background-color: #F5F5F5;
+    }
+    .bTask3__controls,
+    .bTask3__info,
+    .bTask3__settings{
+        margin: 5px 11px;
+    }
+
+    .bTask3__visual,
+    .bTask3__file{
+        height: 200px;}
