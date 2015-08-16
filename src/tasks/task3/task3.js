@@ -168,7 +168,6 @@
             }else{
                 _this.sourceNode.start(0);
                 _this._songTime = _this._buffer.duration*1000;
-                _this.setStatus(_this._songTime, 5000);
             }
 
             _this.pauseTime = Date.now();
@@ -194,8 +193,9 @@
         },
 
         // получение|отображение меты файла
-        "getMeta":function(){
-
+        "getMeta":function(file){
+            var _this = this;
+            _this.setStatus("Сейчас воспроизводится "+file.name);
         },
 
         // отображение статуса (покачто только для загрузки файла)
