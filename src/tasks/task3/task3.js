@@ -71,14 +71,18 @@
             // создаем эквалайзер
             _this.equalizerNode = _this.createEqualizerNode();
 
+            // создаем анализатор
+            _this.analyserNode = _this._audioContext.createAnalyser();
+
             // создаем вывод звука
             _this.destinationNode = _this._audioContext.destination;
 
             // делаем схему обработки аудио (начиная с эквалайзера)
-            _this.equalizerNode.connect(_this.destinationNode);
+            _this.equalizerNode.connect(_this.analyserNode);
+            _this.analyserNode.connect(_this.destinationNode);
 
             // задаем двумерный контекст канве
-            _this.visual.getContext('2d');
+            _this.visualCtx = _this.visual.getContext('2d');
 
             // обработчик клика на области загрузки
             _this.source.addEventListener("click", function(){_this._input.click();});
@@ -189,7 +193,50 @@
 
         // показ музыки
         "showAudio":function(){
+            var _this = this,
+                analyser = _this.analyserNode,
+                canvas = _this.visual,
+                canvasCtx = _this.visualCtx,
+                bufferLength, dataArray, drawVisual,
+                WIDTH = canvas.width,
+                HEIGHT = canvas.height;
 
+            analyser.fftSize = 2048;
+            bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            canvasCtx.clearRect(0, 0, WIDTH, HEIGHT); // 0_0
+
+            function draw() {
+                drawVisual = requestAnimationFrame(draw);
+                analyser.getByteTimeDomainData(dataArray);
+                canvasCtx.fillStyle = 'white';
+                canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+                canvasCtx.lineWidth = 2;
+                canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+                canvasCtx.beginPath();
+
+                var sliceWidth = WIDTH * 1.0 / bufferLength;
+                var x = 0;
+
+                for(var i = 0; i < bufferLength; i++) {
+
+                    var v = dataArray[i] / 128.0;
+                    var y = v * HEIGHT/2;
+
+                    if(i === 0) {
+                        canvasCtx.moveTo(x, y);
+                    } else {
+                        canvasCtx.lineTo(x, y);
+                    }
+
+                    x += sliceWidth;
+                }
+
+                canvasCtx.lineTo(canvas.width, canvas.height/2);
+                canvasCtx.stroke();
+            }
+
+            draw();
         },
 
         // получение|отображение меты файла
