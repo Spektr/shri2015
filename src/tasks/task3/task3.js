@@ -2,6 +2,12 @@
 
     var app = new Application(),
 
+        /**
+         * Проигрыватель
+         *
+         * @param parameters
+         * @constructor
+         */
         Player = function(parameters){
 
             var source = parameters.source,
@@ -13,7 +19,7 @@
                 songAuthor = parameters.songAuthor,
                 statusBar = parameters.statusBar;
 
-            //try{
+            try{
 
                 this.source = this.getElements(source)[0];
                 this.visual = this.getElements(visual)[0];
@@ -26,9 +32,9 @@
 
                 this.initialize();
 
-            //}catch(e){
-            //    this.exception('Can`t initialize player');
-            //}
+            }catch(e){
+                this.exception('Can`t initialize player');
+            }
         };
 
     Player.prototype = {
@@ -37,7 +43,7 @@
         "_audioContext":null,    // апи
         "_buffer":null,          // текущий аудио буфер
         "_pauseTime":null,       // время прослушивания
-        "_songTime":null,        // общее время трэка
+        "_songTime":null,        // общее время трэка todo впилить отображение времени трэка
 
 
         // фильтры
@@ -87,12 +93,12 @@
             // обработчик клика на области загрузки
             _this.source.addEventListener("click", function(){_this._input.click();});
 
+            // загрузка файла при выборе
+            _this._input.addEventListener('change', _this.loadFile(function(){_this.startBtn.innerHTML = "пауза";}), false);
+
             // загрузка файла при перетаскивании
             _this.source.addEventListener('dragover', function(e) {e.preventDefault();return false;}, false);
             _this.source.addEventListener('drop', _this.loadFile(function(){_this.startBtn.innerHTML = "пауза";}), false);
-
-            // загрузка файла при выборе
-            _this._input.addEventListener('change', _this.loadFile(function(){_this.startBtn.innerHTML = "пауза";}), false);
 
             // установка настройки эквалайзера
             _this.settings.addEventListener('change', function(){
@@ -154,6 +160,7 @@
         "play":function(){
             var _this = this;
 
+            // если источник есть убиваем его, сохраняя время
             if(_this.sourceNode){
                 _this.sourceNode.stop(0);
                 _this.pauseTime = (Date.now() - _this.pauseTime)/1000;
@@ -204,7 +211,7 @@
             analyser.fftSize = 2048;
             bufferLength = analyser.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
-            canvasCtx.clearRect(0, 0, WIDTH, HEIGHT); // 0_0
+            canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
             function draw() {
                 drawVisual = requestAnimationFrame(draw);
